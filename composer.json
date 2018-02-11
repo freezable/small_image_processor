@@ -11,6 +11,8 @@
     "php": ">=5.6"
   },
   "autoload": {
-    "classmap": ["src"]
+    "psr-4": {
+      "Yehor\\": "src/"
+    }
   }
 }
