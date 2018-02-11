@@ -19,7 +19,7 @@
 * http://www.gnu.org/licenses/gpl.html
 *
 */
-
+namespace Yehor;
 /*
     $image = new SimpleImage();
     $image->load('image.jpg');
