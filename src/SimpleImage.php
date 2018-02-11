@@ -24,9 +24,9 @@ namespace Yehor;
     $image = new SimpleImage();
     $image->load('image.jpg');
     $image->resizeToWidth(250);
-    $image->compressionValue(75);
+    $image->setCompressionValue(75);
     $image->save('image1.jpg');
- */
+*/
 
 /**
  * Class SimpleImage
@@ -64,8 +64,8 @@ class SimpleImage
      */
     public function load($filename)
     {
-        $image_info = getimagesize($filename);
-        $this->imageType = $image_info['mime'];
+        $imageInfo = getimagesize($filename);
+        $this->imageType = $imageInfo['mime'];
         if ($this->imageType == self::IMAGE_JPEG || $this->imageType == self::IMAGE_JPG) {
             $this->image = imagecreatefromjpeg($filename);
         } elseif ($this->imageType == self::IMAGE_GIF) {
@@ -82,7 +82,8 @@ class SimpleImage
     public function save($filename, $permissions = null)
     {
         if ($this->imageType == self::IMAGE_JPEG || $this->imageType == self::IMAGE_JPG) {
-            imagejpeg($this->image, $filename, $this->compressionValue);
+            $compression = empty($this->compressionValue) ? $this->defaultCompression : $this->compressionValue;
+            imagejpeg($this->image, $filename, $compression);
         } elseif ($this->imageType == self::IMAGE_GIF) {
             imagegif($this->image, $filename);
         } elseif ($this->imageType == self::IMAGE_PNG) {
@@ -91,7 +92,7 @@ class SimpleImage
         $permissions = $permissions == null ? $this->defaultPermissions : $permissions;
         chmod($filename, $permissions);
         imagedestroy($this->image);
-        $this->image = $this->imageType = NULL;
+        $this->image = $this->imageType = $this->compressionValue = null;
     }
 
     /**
@@ -163,6 +164,16 @@ class SimpleImage
         $width = $this->getWidth() * $scale / 100;
         $height = $this->getheight() * $scale / 100;
         $this->resize($width, $height);
+    }
+
+    /**
+     * @param mixed $compressionValue
+     * @return $this
+     */
+    public function setCompressionValue($compressionValue)
+    {
+        $this->compressionValue = $compressionValue;
+        return $this;
     }
 
 }
